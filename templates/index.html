@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-tw">
+<head>
+	
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.0.4/tocas.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.0.4/tocas.min.js"></script>
+	
+</head>
+<body>
+	<div class="ts-container">
+
+		<div class="ts-segment">
+			<div class="ts-wrap">
+
+				<div class="ts-wrap is-compact">
+					<div class="ts-input" id='CourseNo'>
+						<input type="text" placeholder="課程代碼" >
+					</div>
+					<div class="ts-input" id='CourseName'>
+						<input type="text" placeholder="課程名稱">
+					</div>
+				</div>
+
+				<button class="ts-button" id="search">search</button>
+			</div>
+		</div>
+
+		<div class="ts-segment">
+			<div class="ts-wrap" id='switch'>
+				<label class="ts-switch">
+					<input type="checkbox" id='foreignLan' >
+					ForeignLanguage
+				</label>
+				<label class="ts-switch">
+					<input type="checkbox" id='onlyGeneral' >
+					OnlyGeneral
+				</label>
+				<label class="ts-switch">
+					<input type="checkbox" id='onlyNTUST' checked />
+					OnleyNTUST
+				</label>
+				<label class="ts-switch">
+					<input type="checkbox" id='onlyMaster'>
+					OnlyMaster
+				</label>
+			</div>
+		</div>
+		<div class="ts-space"></div>
+		<div class="ts-segment">
+			<div class="ts-box">
+
+				<table class="ts-table" id='table'>
+					<thead>
+						<tr>
+							<th>CourseNo</th>
+							<th>CourseName</th>
+							<th>Node</th>
+							<th>ChooseStudent</th>
+							<th>Restrict1</th>
+							
+						</tr>
+					</thead>
+					<tbody id='list'>
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="ts snackbar">
+		<div class="content"></div>
+		<a class="action"></a>
+	</div>
+
+	<script>
+		window.onload = () => {
+		}
+
+		document.getElementById('search').onclick = function () {
+			
+			const myNode = document.getElementById("list");
+			while (myNode.firstChild) {
+				myNode.removeChild(myNode.lastChild);
+			}
+			
+			document.querySelectorAll('.ts-button').forEach(elem => elem.classList.add('is-loading'));
+			var payload = {
+				'CourseNo': document.querySelector("#CourseNo> input[type=text]").value ? document.querySelector("#CourseNo> input[type=text]").value : '',
+				'CourseName': document.querySelector("#CourseName > input[type=text]").value ? document.querySelector("#CourseName > input[type=text]").value : '',
+				'ForeignLanguage': document.getElementById('foreignLan').checked ? 1 : 0,
+				'OnlyGeneral': document.getElementById('onlyGeneral').checked? 1 : 0,
+				'OnleyNTUST': document.getElementById('onlyNTUST').checked? 1 : 0,
+				'OnlyMaster': document.getElementById('onlyMaster').checked? 1 : 0,
+			}
+			fetch('/ajax?',{
+				method: "POST",
+				body: JSON.stringify(payload)
+			})
+				.then(r => r.json())
+				.then(data => {
+					console.log(data)
+					document.querySelectorAll('.ts-button').forEach(elem => elem.classList.remove('is-loading'));
+
+					for (let i = 0; i < data.length; i++) {
+						const tr = document.createElement("tr");
+						if (data[i].ChooseStudent >= data[i].Restrict1){
+							tr.innerHTML = 
+							`<td class="is-tertiary">${data[i].CourseNo}</td>
+							<td class="is-tertiary">${data[i].CourseName}</td>
+							<td class="is-tertiary">${data[i].Node}</td>
+							<td class="is-tertiary">${data[i].ChooseStudent}</td>
+							<td class="is-tertiary">${data[i].Restrict1}</td>`;
+						}
+						else{
+							tr.innerHTML = 
+							`<td>${data[i].CourseNo}</td>
+							<td>${data[i].CourseName}</td>
+							<td>${data[i].Node}</td>
+							<td>${data[i].ChooseStudent}</td>
+							<td>${data[i].Restrict1}</td>`;
+
+						}
+						document.getElementById('list').append(tr);
+					}
+				});
+			
+		};
+	</script>
+
+</body>
