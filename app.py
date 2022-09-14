@@ -2,7 +2,6 @@ import datetime
 import json
 import requests
 from flask import Flask, render_template, jsonify, request
-from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
