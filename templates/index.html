@@ -107,7 +107,7 @@
 						if (data[i].ChooseStudent >= data[i].Restrict1){
 							tr.innerHTML = 
 							`<td class="is-tertiary">${data[i].CourseNo}</td>
-							<td class="is-tertiary">${data[i].CourseName}</td>
+							<td class="is-tertiary">${data[i].CourseName}(${data[i].CourseTeacher})</td>
 							<td class="is-tertiary">${data[i].Node}</td>
 							<td class="is-tertiary">${data[i].ChooseStudent}</td>
 							<td class="is-tertiary">${data[i].Restrict1}</td>`;
@@ -115,7 +115,7 @@
 						else{
 							tr.innerHTML = 
 							`<td>${data[i].CourseNo}</td>
-							<td>${data[i].CourseName}</td>
+							<td>${data[i].CourseName}(${data[i].CourseTeacher})</td>
 							<td>${data[i].Node}</td>
 							<td>${data[i].ChooseStudent}</td>
 							<td>${data[i].Restrict1}</td>`;

@@ -7,16 +7,10 @@ import pandas as pd
 
 app = Flask(__name__, static_url_path='/static')
 
-query_url = 'http://stuinfo.ntust.edu.tw/classroom_user/classroom_usecondition.aspx'
-
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/test')
-def test():
-    return render_template('test.html')
 
 @app.route('/ajax', methods=['POST'])
 def ajax():
@@ -45,7 +39,7 @@ def ajax():
     }
     
     json_data = {
-        'Semester': '1111',
+        'Semester': '1112',
         'CourseNo': recv_json['CourseNo'],
         'CourseName': recv_json['CourseName'],
         'CourseTeacher': '',
@@ -61,6 +55,7 @@ def ajax():
     response = requests.post('https://querycourse.ntust.edu.tw/querycourse/api/courses', cookies=cookies, headers=headers, json=json_data)
     print(response.status_code)
     df = pd.json_normalize(response.json())
+    # df.to_csv("./tmp.csv", index=0)
     df.loc[:, 'Restrict1'] = df.Restrict1.astype('int')
     df.loc[:, 'Rate'] =   df.Restrict1 / df.ChooseStudent
     df = df[df.ChooseStudent < df.Restrict1]
