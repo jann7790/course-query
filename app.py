@@ -39,7 +39,7 @@ def ajax():
     }
     
     json_data = {
-        'Semester': '1112',
+        'Semester': '1122',
         'CourseNo': recv_json['CourseNo'],
         'CourseName': recv_json['CourseName'],
         'CourseTeacher': '',
@@ -57,7 +57,7 @@ def ajax():
     df = pd.json_normalize(response.json())
     # df.to_csv("./tmp.csv", index=0)
     df.loc[:, 'Restrict1'] = df.Restrict1.astype('int')
-    df.loc[:, 'Rate'] =   df.Restrict1 / df.ChooseStudent
+    df.loc[:, 'Rate'] =   df.Restrict1 / (df.ChooseStudent+1)
     df = df[df.ChooseStudent < df.Restrict1]
     df = df.sort_values(by=['Rate', 'ChooseStudent'])
     js = df.to_json(orient = 'records')
@@ -71,4 +71,4 @@ def about():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
